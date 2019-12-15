@@ -3,9 +3,9 @@
 
 [![Build Status](https://travis-ci.com/csci-e-29/2019fa-pset-5-ruchiasthana.svg?token=LoHckPFosYy1y1PJ2eXw&branch=master)](https://travis-ci.com/csci-e-29/2019fa-pset-5-ruchiasthana)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/070d3607135d75e08fd6/maintainability)](https://codeclimate.com/repos/5dcf56a7e3516d01790029a5/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/32e9444157afa590b963/maintainability)](https://codeclimate.com/repos/5df505699ce2d901a3007ae3/maintainability)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/070d3607135d75e08fd6/test_coverage)](https://codeclimate.com/repos/5dcf56a7e3516d01790029a5/test_coverage)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/32e9444157afa590b963/test_coverage)](https://codeclimate.com/repos/5df505699ce2d901a3007ae3/test_coverage)
 
 **Table of Contents**
 Imsert a Table of Contents Here 
@@ -22,6 +22,21 @@ I work as a machine learning engineer at IBM. My team handles inbound communicat
 1. A Determinination of the Most Frequently Asked Topics
 2. Identification of the Most Commonly Mentioned Terms and Services 
 4. Effective Visualizations that can efficiently and effectively communicate key insights to Non-Technical Project Managers and Stakeholders
+
+### Course Content Integration
+For my final project I created an automated pipeline that fetches data from a cloud instance, cleans the data, and performs Topic Modeling, NGram Analysis, and Word Cloud Generation. The project touches on a number of topics we have learned over the course of this class including: 
+ - Setting up an EC2 instance and Loading Data into Amazon EC2 Instance 
+ - Using Luigi to Pull Data from the Amazon EC2 Instance 
+ - Using Dask to Clean Data in a Delayed, Parallel Fashion 
+ - Working with and Extending an NLP Library (WordEmbeddings PSET 4)
+ - Using Pandas to efficiently analyze dataframe of healdlines
+ - Classes and Inheritance Patterns to Build the Topic Modeling, NGram Analysis, and WordCloud Classes
+ - Lambda Functions to Appply Topic Modeling / NGram / WordCloud functions in a Parallel Manner 
+ - Testing Pipeline and Workflow, as well as Task Functionality 
+ - Package Structure and Heirachy with data, output, final_project, and tasks folders 
+ - Git Quality : Doc Strings, Pipfile, Piplockfile, travis.yaml 
+ - Python Quality: Strong Commit History, Dev Branch, Versioning
+
 
 ## Data Preprocessing
 For the Client POC I build, I used historical chat transcript data, however that is not something I can share on this platform. For that purpose, I have loaded Arctile Text onto an AWS EC2 instance. Article Text was chosen because it is similar in nature to the chatbot utterances we wanted to analyze with Topic Modeling. 
@@ -92,12 +107,12 @@ cloud = CreateWordCloud(
     cloud.create_wordcloud()
 ```
 
-![HeadlineText-0c66ad05](https://user-images.githubusercontent.com/42304193/70844344-e5fa0f80-1e0d-11ea-8e57-010d263f70c7.png)
+![Sample Word Cloud]("images/HeadlineText-0c66ad05.png")
 
 ## Results and Conclusions 
 In conclusion I was able to automated a pipeline that could run TopicModeling, NGram Analysis, and Word Cloud Generation on a set of Conversational Text. Below is a representation of this pipeline: 
 
-<img width="1257" alt="pipeline" src="https://user-images.githubusercontent.com/42304193/70844356-0fb33680-1e0e-11ea-837c-53e8f52dd2fb.png">
+![Automated Topic Modeling Pipeline]("images/pipeline.png")
 
 Below is the command to run this automated pipepline : 
 
