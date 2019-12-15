@@ -1,0 +1,37 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+v = {editable = true,version = "*"}
+
+[packages]
+csci-utils = {editable = true,git = "https://github.com/csci-e-29/2019fa-csci-utils-ruchiasthana"}
+awscli = "*"
+pandas = "*"
+xlrd = "*"
+pyarrow = "*"
+openpyxl = "*"
+setuptools-scm = "*"
+dask = {extras = ["dataframe"],version = "*"}
+fastparquet = "*"
+s3fs = "*"
+luigi = "*"
+boto3 = "*"
+pytest-cov = "*"
+typed-ast = "*"
+nltk = "*"
+gensim = "*"
+more-itertools = "*"
+collections = "*"
+functools = "*"
+os = "*"
+7999f02 = {path = "./word_cloud"}
+sklearn = "*"
+fuzzywuzzy = {git = "git://github.com/seatgeek/fuzzywuzzy.git",ref = "0.17.0"}
+
+[requires]
+python_version = "3.7"

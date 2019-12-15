@@ -33,6 +33,7 @@ For my final project I created an automated pipeline that fetches data from a cl
  - Classes and Inheritance Patterns to Build the Topic Modeling, NGram Analysis, and WordCloud Classes
  - Lambda Functions to Appply Topic Modeling / NGram / WordCloud functions in a Parallel Manner 
  - Testing Pipeline and Workflow, as well as Task Functionality 
+ - Adding and Argument Parser, Cli File, and Main File 
  - Package Structure and Heirachy with data, output, final_project, and tasks folders 
  - Git Quality : Doc Strings, Pipfile, Piplockfile, travis.yaml 
  - Python Quality: Strong Commit History, Dev Branch, Versioning
