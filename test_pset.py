@@ -1,4 +1,5 @@
 import os
+import datetime
 import luigi
 import boto3
 import numpy as np
@@ -7,7 +8,7 @@ from unittest import TestCase
 from luigi import LuigiStatusCode
 from tempfile import TemporaryDirectory
 from luigi import ExternalTask, Parameter, Task
-from pset_5.tasks.yelp_reviews import CleanedReviews, ByDecade, ByStars
+from final_project.tasks.clean_headlines import CleanedHeadlines
 
 
 """
@@ -92,45 +93,21 @@ class TestBotoConnection(TestCase):
 
 
 class TestPipeline(TestCase):
-    def testCleanedReviewsBuild(self):
+    def testCleanedHeadlinesBuild(self):
         build_status = luigi.build(
-            [CleanedReviews()], local_scheduler=True, detailed_summary=True
+            [CleanedHeadlines()], local_scheduler=True, detailed_summary=True
         ).status
         self.assertEqual(build_status, LuigiStatusCode.SUCCESS)
 
-    def testCleanedReviewsFileExists(self):
+    def testCleanedHeadlinesFileExists(self):
         build_status = luigi.build(
-            [CleanedReviews()], local_scheduler=True, detailed_summary=True
+            [CleanedHeadlines()], local_scheduler=True, detailed_summary=True
         ).status
-        self.assertTrue(os.path.exists("./data/CleanedReviews-files/"))
-        self.assertTrue(os.path.exists("./data/CleanedReviews-files/part.0.parquet"))
+        date = datetime.datetime.now()
+        date_suffix = str(date.month) + '_' + str(date.day) + '_' + str(date.year)
+        self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/"))
+        self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/part.0.parquet"))
 
-    def testByDecadeBuild(self):
-        build_status = luigi.build(
-            [ByDecade()], local_scheduler=True, detailed_summary=True
-        ).status
-        self.assertEqual(build_status, LuigiStatusCode.SUCCESS)
-
-    def testByDecadeFileExists(self):
-        build_status = luigi.build(
-            [CleanedReviews()], local_scheduler=True, detailed_summary=True
-        ).status
-        self.assertTrue(os.path.exists("./data/ByDecade/"))
-        self.assertTrue(os.path.exists("./data/ByDecade/part.0.parquet"))
-
-    def testByStarsBuild(self):
-        build_status = luigi.build(
-            [ByStars()], local_scheduler=True, detailed_summary=True
-        ).status
-        self.assertEqual(build_status, LuigiStatusCode.SUCCESS)
-
-    def testByStarsFileExists(self):
-        build_status = luigi.build(
-            [CleanedReviews()], local_scheduler=True, detailed_summary=True
-        ).status
-        self.assertTrue(os.path.exists("./data/ByStars/"))
-        self.assertTrue(os.path.exists("./data/ByStars/part.0.parquet"))
-    
     def testDropNA(self):
         data = [['Tom', 10], ['Jen',5], ['Ruchi', np.nan]]
         df = pd.DataFrame(data, columns=['Name', 'Age'])
@@ -145,16 +122,3 @@ class TestPipeline(TestCase):
         df_groupBy = df.groupby('Year').mean()
         self.assertTrue(df_groupBy['Age'][2010], 7.5)
         self.assertTrue(df_groupBy['Age'][2011], 7.0)
-  
-    def testByStarsValues(self):
-        df_byStars = pd.read_parquet("./data/ByStars/part.0.parquet")
-        self.assertEqual(df_byStars["review_len"][1], 772)
-        self.assertEqual(df_byStars["review_len"][2], 751)
-        self.assertEqual(df_byStars["review_len"][3], 712)
-        self.assertEqual(df_byStars["review_len"][4], 605)
-        self.assertEqual(df_byStars["review_len"][5], 488)
-
-    def testByDecadeValues(self):
-        df_byDecade = pd.read_parquet("./data/ByDecade/part.0.parquet")
-        self.assertEqual(df_byDecade["review_len"][2000], 763)
-        self.assertEqual(df_byDecade["review_len"][2010], 595)
