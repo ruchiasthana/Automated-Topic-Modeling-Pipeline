@@ -14,6 +14,7 @@ Imsert a Table of Contents Here
 - [Data Preprocessing](#data-preprocessing)
 - [Topic Modeling](#topic-modeling)
 - [NGram Analysis](#ngram-analysis)
+- [Word Cloud](#word-cloud)
 - [Technical Pipeline](#technical-pipeline)
 - [Results and Conclusions](#results-and-conclusions)
 - [Improvements](#improvements)
@@ -81,37 +82,31 @@ If you want to see the sole behavior of Topic Modeling please run the command be
 ```
 pipenv run python3 -m final_project -tm
 ```
-The output of this function will be stored in output/TopicModeling/HeadlineText-[hash]
+The output of this function will be stored in output/TopicModeling/HeadlineText-[hash].csv
 
 ### Salted Output for Topic Modeling
 Running the Topic Modeling Code can be a very time cosuming process taking upwards of 20 minutes. While this time constraint is something our stakeholders seem to be okay with, we do not want them waiting around for a Topic Modeling Script to run if the cleaned data has not changed. To avoid this, we concatonate the last 50 headline_ids and hash the content to generate a len 8-alphanumeric id that we append to the output filepath. If an outputfile with the len 8-alphanumeric id exists, we do not re-run the topic modeling script as we know the data has not changed. 
 
 ## NGram Analysis 
-We also wanted to provide our stakeholders with some specific insight on terms that customers strongly expressed when interacting with an IBM product. In order to do this, we conducted an NGram Analysis. N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics customers have started talking about, and what topics that have fallen out of favor. TF-IDF weightings can be applied to N-Gram extraction to narrow down the scope of bigrams and trigrams. 
+We also wanted to provide our stakeholders with some specific insight on terms that customers strongly expressed when interacting with an IBM product. In order to do this, we conducted the NGram Analysis. N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics customers have started talking about, and what topics have fallen out of favor. We focused mainly on 2 and 3 letter phrases known as bigrams and trigrams for this analysis. TF-IDF weightings can be applied to sets of ngrams to narrow down the scope of bigrams and trigrams returned. 
 
-Once we generated top bigrams and trigrams from our dataset, we went back and tagged each utterance with bigrams and trigrams if they were in the sentence or vernacular in the sentenec closely matched the ngrams extracted. The template to run this method is shown below:
+Once we generated top bigrams and trigrams from our dataset, we went back and tagged each utterance with the most related bigrams and trigrams given a certain threshold. Our stakeholder's really liked this feature because it allowed them to take a commonly expressed bigram and see which utterances mentioned them. 
 
+If you want to see the sole behavior of the NGram Analysis please run the command below: 
 ```
-fm = EnableFuzzyMatching(
-        data_folder = data_outputfolder,
-        data_filetype = 'parquet',
-        field_name = 'headline_text',
-        utterance_ngram_mapping_output= model_output.replace('TopicModeling', 'UtteranceNGramMappings')
-    )
-    fm.write_ngrams_to_utterances()
-
+pipenv run python3 -m final_project -ng
 ```
+The output of this function will be stored in output/UtteranceNGramMappings/HeadlineText-[hash].csv
 
-After writing a class to(1) determine top Bigrams and Trigrams in our dataset, and (2) labele Article Headlines with closely matched bigrams and trigrams, I was able to create a Word Cloud of the terms that could in a glance communicate these results. Our product stakeholders really liked this visualization as it was "effecient, effective, and highly non-technical". The template to run this method is shown below:
 
+## Word Cloud
+When you are parsing through conversations ranging in the millions, it is often diffuclt to convey the resulsts in an effective visual to both technical and non-technical adopters. Glancing at a Word Cloud, one could easily capture the most frequently occuring keywords in a set of data. A word cloud had a strong info to ink ratio making it an exceptional visual in the NLP community. I was able to create a Word Cloud based off terms in the conversation / headline text. Our product stakeholders really liked this visualization as it was "effecient, effective, and highly non-technical". The template to run this method is shown below:
+
+If you want to see the sole behavior of the WordCloud Generator please run the command below: 
 ```
-cloud = CreateWordCloud(
-        text_path = model_output,
-        field_name = 'headline_text',
-        output_path = model_output.replace('TopicModeling', 'WordClouds').replace('.csv', '.png')
-    )
-    cloud.create_wordcloud()
+pipenv run python3 -m final_project -wc
 ```
+The output of this function will be stored in output/UtteranceNGramMappings/HeadlineText-[hash].png
 
 ![Sample Word Cloud]("images/HeadlineText-0c66ad05.png")
 
@@ -120,10 +115,10 @@ In conclusion I was able to automated a pipeline that could run TopicModeling, N
 
 ![Automated Topic Modeling Pipeline]("images/pipeline.png")
 
-Below is the command to run this automated pipepline : 
+In order to run the complete pipeline you can run the following command:
 
 ```
-pipenv run python3 -m final_project
+pipenv run python3 -m final_project -a 
 ```
 
 ## Improvements
@@ -132,4 +127,5 @@ The stakeholders for this project were very impressed with the results from Topi
 1. Integrate Pipeline with Cloudant Database
 2. Add Visualizations that Communicate Valuable Insights
 3. Containerize the pipeline (Consider Kubflow)
+4. Add more extensive unit tests
 
