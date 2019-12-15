@@ -26,9 +26,7 @@ typed-ast = "*"
 nltk = "*"
 gensim = "*"
 more-itertools = "*"
-collections = "*"
 functools = "*"
-os = "*"
 7999f02 = {path = "./word_cloud"}
 sklearn = "*"
 fuzzywuzzy = {git = "git://github.com/seatgeek/fuzzywuzzy.git",ref = "0.17.0"}

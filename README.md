@@ -10,9 +10,11 @@
 **Table of Contents**
 Imsert a Table of Contents Here 
 - [Project Description](#project-description)
+- [Course Content Integration](#course-content-integration)
 - [Data Preprocessing](#data-preprocessing)
 - [Topic Modeling](#topic-modeling)
 - [NGram Analysis](#ngram-analysis)
+- [Word Cloud](#word-cloud)
 - [Technical Pipeline](#technical-pipeline)
 - [Results and Conclusions](#results-and-conclusions)
 - [Improvements](#improvements)
@@ -22,39 +24,48 @@ I work as a machine learning engineer at IBM. My team handles inbound communicat
 1. A Determinination of the Most Frequently Asked Topics
 2. Identification of the Most Commonly Mentioned Terms and Services 
 4. Effective Visualizations that can efficiently and effectively communicate key insights to Non-Technical Project Managers and Stakeholders
+For my final project I created an automated pipeline that fetches data from a cloud instance, cleans the data, and performs Topic Modeling, NGram Analysis, and Word Cloud Generation. You can view this process with the following command
+
+```
+pipenv run python3 -m final_project -a
+```
+
+@Developer Note: Since Topic Modeling can take a very long time, I have included an updated TopicModeling output file with my submission. Please feel free to add this file to : './output/TopicModeling/' and then run above following command to render the automated pipeline more quickly. Below I will detail each process individually along with commands to run each part in isolation!
 
 ### Course Content Integration
-For my final project I created an automated pipeline that fetches data from a cloud instance, cleans the data, and performs Topic Modeling, NGram Analysis, and Word Cloud Generation. The project touches on a number of topics we have learned over the course of this class including: 
+Before diving into a detailed report of my final project, I just wanted to highlight that this project touches on a number of topics we have learned over the course of this class including: 
+
  - Setting up an EC2 instance and Loading Data into Amazon EC2 Instance 
- - Using Luigi to Pull Data from the Amazon EC2 Instance 
+ - Using Luigi to Pull Data from an Amazon EC2 Instance 
  - Using Dask to Clean Data in a Delayed, Parallel Fashion 
  - Working with and Extending an NLP Library (WordEmbeddings PSET 4)
- - Using Pandas to efficiently analyze dataframe of healdlines
- - Classes and Inheritance Patterns to Build the Topic Modeling, NGram Analysis, and WordCloud Classes
- - Lambda Functions to Appply Topic Modeling / NGram / WordCloud functions in a Parallel Manner 
+ - Using Pandas to efficiently analyze a dataframe of healdlines
+ - Class and Inheritance Patterns to Build Classes for Topic Modeling, NGram Analysis, and WordCloud Classes
+ - Lambda Functions to apply Topic Modeling / NGram / WordCloud functions in a Parallel Manner 
  - Testing Pipeline and Workflow, as well as Task Functionality 
- - Adding and Argument Parser, Cli File, and Main File 
- - Package Structure and Heirachy with data, output, final_project, and tasks folders 
+ - Salting the Topic Modeling Output Path so that the model is only run if the training data changed
+ - Adding an argument parser, cli file, and main file
+ - Creating a package with: data folder, output folder, and task folder 
  - Git Quality : Doc Strings, Pipfile, Piplockfile, travis.yaml 
- - Python Quality: Strong Commit History, Dev Branch, Versioning
+ - Python Quality: Strong Commit History, Dev Branch, and Versioning
 
 
 ## Data Preprocessing
-For the Client POC I build, I used historical chat transcript data, however that is not something I can share on this platform. For that purpose, I have loaded Arctile Text onto an AWS EC2 instance. Article Text was chosen because it is similar in nature to the chatbot utterances we wanted to analyze with Topic Modeling. 
-Data Source : 
+For the Client POC I build, I used historical chat transcript data, however that is not something I can share on this platform. For that purpose, I have loaded Arctile Text onto an AWS EC2 instance. Article Text was chosen because it is similar in nature to the chatbot utterances we wanted to analyze with Topic Modeling. Furthermore, the dataset was similar in size and dimension to the chat transcript data we have. 
 
-Data tha was loaded into the AWS EC2 instance needed to be cleaned before Topic Modeling could be run on the data set. Pre-processing the data included removing columns with empty or null data, as well as removing duplicates in data. Article ID Tags came in super handy for this process. Once the data was cleaned it was stored in partioned *.parquet files in the ./data/CleanedHeadlines-[date] folder. The reason behind including the date in the folders we create to store the data is so that we are only fetching data once a day. This was a descision made from our stakholders. 
+Data was loaded onto the AWS EC2 instance, it waas then cleaned by a CleanedHeadlines class before generating a Topic Model. Pre-processing the data included removing columns with empty or null data, as well as removing duplicates in data. Article ID Tags came in super handy for this process. Once the data was cleaned it was stored in partioned *.parquet files in the ./data/CleanedHeadlines-[date] folder. The reason behind including the date in the folders was to ensure we were only fetching data once a day. This was a descision made from our stakholders. 
 
-If you want to run code to only generate the ./data/CleanedHeadlines-[date] folder run the following command: 
-
+If you want to see the sole behavior of the Data Processing please run the command below: 
 ```
-pipenv run python3 final_project/tasks/cleaned_headlines.py
+pipenv run python3 -m final_project -cr
 ```
+This will generate .parquet files in the ./data/CleanedHeadlines-[date] folder.
 
 ## Topic Modeling
-Topic modeling is a type of statistical modeling that can be used to discover abstract “topics” that occur in a collection of documents. This methods could be applied to our chat trascripts to determine what topics are commonly mentioned in chat conversations. Latent Dirichlet Allocation (LDA) is an example of a topic model that is used to classify text in a document to a particular topic. It builds a topic per document model and words per topic model, modeled as Dirichlet distributions. We can take the topics generated by Topic Modeling and use them to classify each chat conversation. Tagging a conversation with a generated topic can be a good way to show the variety of utterances captured under a generated topic.
+Topic modeling is a type of statistical modeling that can be used to discover abstract “topics” that occur in a collection of documents. This method could be applied to our chat trascripts to determine what topics are commonly mentioned in chat conversations. Latent Dirichlet Allocation (LDA) is an example of a topic model that is used to classify text in a document to a particular topic. It builds a topic per document model and words per topic model, modeled as Dirichlet distributions. We can take the topics generated by Topic Modeling and use them to classify each chat conversation. Tagging a conversation with a generated topic can be a good way to show the variety of utterances captured under a generated topic. For the sake of demonstration, this process was applied to Article Text.
 
-When conducting our analysis for Topic Modeling we wanted to consider 2 models in particular: LDA and LDA+TFIDF. The pre-processing and post-processing, as well as model structure is the same for both of these models, so I decided to create a Topic Modeling Class that could be shared between our investigation of both methods. Below are a subset of key functions that make up the Topic Modeling class.
+When exploring Topic Modeling, we wanted to compare different models to see which would perform better. The two models in particular was an LDA and LDA + TFIF model. The pre-processing and post-processing for both topic modeling approaches was the same, and the structure for the models was also quite similar. Using Class and Inhertiance patterns I was able to create a Generalized Topic Modeling class that could be inherited by both methods. Below are a set of key functions that make up the this Topic Modeling Class. 
+
 ```
 class TopicModeling(self):
     def load_data(self):
@@ -67,58 +78,47 @@ class TopicModeling(self):
         ...
 ```
 
-The structure for calling the Topic Modeling Class is show below. Note that the data_outputfolder should point to the path where the CleanedHeadlines are. 
-
+If you want to see the sole behavior of Topic Modeling please run the command below: 
 ```
-model = ApplyTopicModel(
-        data_folder = cleaned_data_outputfolder,
-        data_filetype = 'parquet',
-        model_type = 'lda_tfidf',
-        field_name = 'headline_text'
-    )
-``` 
+pipenv run python3 -m final_project -tm
+```
+The output of this function will be stored in output/TopicModeling/HeadlineText-[hash].csv
 
-### Logistics of Topic Modeling (SALTING!)
-Once we have cleaned the data and loaded it into the ./data/CleanedHeadlines-[date] folder we want to conduct Topic Modeling in the whole data set if new data is added. Since Topic Modeling is a very time cosuming task, we wanted to conduct Topic Modeling only when there was new data. Thus we collected that last 50 headline_id values concatenedated them into a string and hashed that string with a salt to get a 8-alphanumeric id that we could append to the Topic Modeling output folder. If a Folder with the 8-alphanumeric id exists in the ./output/TopicModeling folder we return the path to that folder, otherwise we run the Topic Modeling Script. 
+### Salted Output for Topic Modeling
+Running the Topic Modeling Code can be a very time cosuming process taking upwards of 20 minutes. While this time constraint is something our stakeholders seem to be okay with, we do not want them waiting around for a Topic Modeling Script to run if the cleaned data has not changed. To avoid this, we concatonate the last 50 headline_ids and hash the content to generate a len 8-alphanumeric id that we append to the output filepath. If an outputfile with the len 8-alphanumeric id exists, we do not re-run the topic modeling script as we know the data has not changed. 
 
 ## NGram Analysis 
-In addition to Topic Modeling, we also wanted to provide additional more specific insight into ket terms strongly expressed in our data set. N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics customers have started talking about, and what topics that have fallen out of favor. TF-IDF weightings can be applied to N-Gram extraction to narrow down the scope of bigrams and trigrams. 
+We also wanted to provide our stakeholders with some specific insight on terms that customers strongly expressed when interacting with an IBM product. In order to do this, we conducted the NGram Analysis. N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics customers have started talking about, and what topics have fallen out of favor. We focused mainly on 2 and 3 letter phrases known as bigrams and trigrams for this analysis. TF-IDF weightings can be applied to sets of ngrams to narrow down the scope of bigrams and trigrams returned. 
 
-Once we generated top bigrams and trigrams from our dataset, we went back and tagged each utterance with bigrams and trigrams if they were in the sentence or vernacular in the sentenec closely matched the ngrams extracted. The template to run this method is shown below:
+Once we generated top bigrams and trigrams from our dataset, we went back and tagged each utterance with the most related bigrams and trigrams given a certain threshold. Our stakeholder's really liked this feature because it allowed them to take a commonly expressed bigram and see which utterances mentioned them. 
 
+If you want to see the sole behavior of the NGram Analysis please run the command below: 
 ```
-fm = EnableFuzzyMatching(
-        data_folder = data_outputfolder,
-        data_filetype = 'parquet',
-        field_name = 'headline_text',
-        utterance_ngram_mapping_output= model_output.replace('TopicModeling', 'UtteranceNGramMappings')
-    )
-    fm.write_ngrams_to_utterances()
-
+pipenv run python3 -m final_project -ng
 ```
+The output of this function will be stored in output/UtteranceNGramMappings/HeadlineText-[hash].csv
 
-After writing a class to(1) determine top Bigrams and Trigrams in our dataset, and (2) labele Article Headlines with closely matched bigrams and trigrams, I was able to create a Word Cloud of the terms that could in a glance communicate these results. Our product stakeholders really liked this visualization as it was "effecient, effective, and highly non-technical". The template to run this method is shown below:
 
+## Word Cloud
+When you are parsing through conversations ranging in the millions, it is often diffuclt to convey the resulsts in an effective visual to both technical and non-technical adopters. Glancing at a Word Cloud, one could easily capture the most frequently occuring keywords in a set of data. A word cloud had a strong info to ink ratio making it an exceptional visual in the NLP community. I was able to create a Word Cloud based off terms in the conversation / headline text. Our product stakeholders really liked this visualization as it was "effecient, effective, and highly non-technical". The template to run this method is shown below:
+
+If you want to see the sole behavior of the WordCloud Generator please run the command below: 
 ```
-cloud = CreateWordCloud(
-        text_path = model_output,
-        field_name = 'headline_text',
-        output_path = model_output.replace('TopicModeling', 'WordClouds').replace('.csv', '.png')
-    )
-    cloud.create_wordcloud()
+pipenv run python3 -m final_project -wc
 ```
+The output of this function will be stored in output/UtteranceNGramMappings/HeadlineText-[hash].png
 
-![Sample Word Cloud]("images/HeadlineText-0c66ad05.png")
+![HeadlineText-0c66ad05](https://user-images.githubusercontent.com/42304193/70844344-e5fa0f80-1e0d-11ea-8e57-010d263f70c7.png)
 
 ## Results and Conclusions 
 In conclusion I was able to automated a pipeline that could run TopicModeling, NGram Analysis, and Word Cloud Generation on a set of Conversational Text. Below is a representation of this pipeline: 
 
-![Automated Topic Modeling Pipeline]("images/pipeline.png")
+<img width="1257" alt="pipeline" src="https://user-images.githubusercontent.com/42304193/70844356-0fb33680-1e0e-11ea-837c-53e8f52dd2fb.png">
 
-Below is the command to run this automated pipepline : 
+In order to run the complete pipeline you can run the following command:
 
 ```
-pipenv run python3 -m final_project
+pipenv run python3 -m final_project -a 
 ```
 
 ## Improvements
@@ -127,4 +127,5 @@ The stakeholders for this project were very impressed with the results from Topi
 1. Integrate Pipeline with Cloudant Database
 2. Add Visualizations that Communicate Valuable Insights
 3. Containerize the pipeline (Consider Kubflow)
+4. Add more extensive unit tests
 

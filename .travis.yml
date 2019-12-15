@@ -1,0 +1,32 @@
+language: python
+dist: xenial
+python:
+- 3.7
+install:
+- pip install pipenv
+- pipenv install --system --deploy --ignore-pipfile
+stages:
+- test
+- name: answers
+  if: branch = dev2
+jobs:
+  include:
+  - stage: test
+    script: pytest --cov-report xml --cov-report term
+    install:
+    - pipenv install --dev --ignore-pipfile --deploy
+    before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+      > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - "./cc-test-reporter before-build"
+    after_script:
+    - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
+  - stage: answers
+    script:
+    - python3 -m final_project
+env:
+  global:
+  - secure: ES2MAnPwWFhosOoUXPE+H1miEMqIoSJAUA7UUrL5mdaNFgkrUBZ6CrO2dRUY3KkMKjI+e6P0DbSQ5nrVek5kkLsl4tYP97LS9QyXOHVJJeki91kvKz66npehSWG2gChIcLmNTHkCkuU1G5tBmt5E3MWjhJaR1PDm/Zz9cksPUvpRoNNZfqNO9EZDJgcex/9nv5a86/esnl0rWAn5fvQxncMz5BkutjE+lBQYvt13tnaDhCPvhDm4wi0++ULbNpM6+pe3ZYzJn0E7xfXwFYBlQSy/NV8U7YbBEJunJpKTz728tE8l5aJiftEqfkMVbOS6pAQ2nGJQjwBIsRVIWanUYQzN6CEZpXK6cLm+ttH+yNectgj/IlL4PSoMzFb1lAo1PoLpY1SldzXFsQ8Lff7W0DBPanKle2nS8WIsbcC0Cqe7/PFnfKjhJiDXMOpuk2ypyueIkVwBR70VVXNleon2HfQhW2acr9lak9DqmoI/Q1SC+jG4YvTt4QT1HBWL06oYGgvJpgr+mexYZfXW0Blv0f8bmXzYf2TgSJLZqpodjRSEa3Ud+toC8QMvk3ciWuA1Xk01K7on8yv0jywe66i4mYpdRTTxFab9iFnDDNeksMUzYkySNQDFPSAnKSNfff7cLUoGfAKpZHaFJp7Eg/dx9xrK5naMUnHLOLvuIWNhxHM=
+  - secure: lOuAveRDZlJPuRyQqHJDeTiJRXCJcAOaLeio0MZrr77mYRrUEz5tGFRoc1f8aBlfss/qqyXaoWjxTADRKl95Qw6XEqw+nyZigk6Zg7iObubqpLeBGmPxvpQClYNG/rsVXe93w2S/DnTUj+XVOFylWsJTrGAk1twxaVbZzl3GQBhrnvzzp/CaOrm8j/MXWDnqzUWDGlbH4PQlZ+KMe0Jpv1Q5ReBKPVXThAMd2+Oq6cIPVg9prR39yDkpE3ireiLwMUhO4NAJz49Xe/J6XpSuXmDs7woxpFH08XNTEw7gY6B72nGiR3v3N2Jno+38XZmTUSBMB00qCUSVDeTb1AMcxhSOsuoEBMta089bz3Kl8W7h4bDBJ7k5MJkg2wUD55ZeSVwod/7TeveihiPeRq9QA1KF3zceqS2sJ3QN2mkfJDcj9bb56NxrLOUD3t51ei60O3jVL76dGVwIc+0+AqDusVcBwBaQe9tqFI1+Yr0SXNMpyDftwkNQKm8jRxJp4IFypv7YH7kgwy23vY5ydmYturN0zZ9g8dQZtL8fBN4CPKU3bJV3UqhJGdwoEFZxK3WftVb03E8yfaVLGm0ouU7iry/vY9Qv1pMHv+07odwdKa/SizkbaQG2WvuTbNz2h5sbs90xThPx0NLLMC6wA+Hed1I4MetvKk52ZMZp1wghago=
+  - secure: vNKoeXhsXVMO8J/lbm1dsVw3hCClxlG9Y/YdsBv/O2NvCKpA9AxY8/gepldQRnuWo2fKvs+dh5wGyAgPHiodYPN6zvBCdtCYUT/jwbQyiCcZlzGG7Gvcq8SMPbEFU7c0v9fJuapxPHa5PONC/t/iu15MEVRgYpqSqZ2UpDsGa/wvGEcUCctYaLUoMdmdwz7jgcPfG7mLEgWuoxdT8RaRWvLT/or+Z7KkJhTMFeMh72KCQVptNlGRtSz2JH6N3b58nX0BI+sZQI2HCUtVho457VPINnZm7rpWENyRO2LkVm4skdr+LH1dIoDGsPtz9F7e34d2iwRp8j93X0fv8QJvqzKmAWvRDopZbMRXRf8JMrbcKtd7rhBO6p3XkIeoLp1BmaaeULqBjPhAJ5I2JI/MB+sOfB6E0ldJyvdY/4/HLR4V+rD1CfL9YMvjfxOpaWf4S6UKe8a1+f2IiXZ30nRSBPAJPckCFeKhP1sF7eOV3GfWTwPqmb54fNTeyW2dtEuv9AuA6p/pezweeU+z9vnOlauSxK1t4YyfZ4yT7BQyf1NXbEvQy7E320ad2/NiYo5B3sDMcQuXAFdanJx1SHZrF5m8azwLD0YkXzgsUi3VlxjBgxlaEbJEI3yulf6LnsrYgt0k3yrdnMczjhY4e5VmaMWEkJhq4PwB3vVG8hr0hTc=
