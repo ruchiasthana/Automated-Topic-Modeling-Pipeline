@@ -108,12 +108,12 @@ pipenv run python3 -m final_project -wc
 ```
 The output of this function will be stored in output/UtteranceNGramMappings/HeadlineText-[hash].png
 
-![Sample Word Cloud]("images/HeadlineText-0c66ad05.png")
+![HeadlineText-0c66ad05](https://user-images.githubusercontent.com/42304193/70844344-e5fa0f80-1e0d-11ea-8e57-010d263f70c7.png)
 
 ## Results and Conclusions 
 In conclusion I was able to automated a pipeline that could run TopicModeling, NGram Analysis, and Word Cloud Generation on a set of Conversational Text. Below is a representation of this pipeline: 
 
-![Automated Topic Modeling Pipeline]("images/pipeline.png")
+<img width="1257" alt="pipeline" src="https://user-images.githubusercontent.com/42304193/70844356-0fb33680-1e0e-11ea-837c-53e8f52dd2fb.png">
 
 In order to run the complete pipeline you can run the following command:
 
