@@ -127,5 +127,5 @@ The stakeholders for this project were very impressed with the results from Topi
 1. Integrate Pipeline with Cloudant Database
 2. Add Visualizations that Communicate Valuable Insights
 3. Containerize the pipeline (Consider Kubflow)
-4. Add more extensive unit tests
+4. Add more extensive unit tests for workflow
 
