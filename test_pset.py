@@ -20,18 +20,20 @@ Template for the first Test Case comes from:
 """
 
 class TestPipeline(TestCase):
-    # def testCleanedHeadlinesBuild(self):
-    #     build_status = luigi.build([CleanedHeadlines(subset=False)],local_scheduler=True, detailed_summary=True).status
-    #     self.assertEqual(build_status, LuigiStatusCode.SUCCESS)
+    def testCleanedHeadlinesBuild(self):
+        build_status = luigi.build([CleanedHeadlines(subset=False)],local_scheduler=True, detailed_summary=True).status
+        print('BUILD STATUS', build_status)
+        self.assertEqual(build_status, LuigiStatusCode.SUCCESS)
 
-    # def testCleanedHeadlinesFileExists(self):
-    #     build_status = luigi.build(
-    #         [CleanedHeadlines()], local_scheduler=True, detailed_summary=True
-    #     ).status
-    #     date = datetime.datetime.now()
-    #     date_suffix = str(date.month) + '_' + str(date.day) + '_' + str(date.year)
-    #     self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/"))
-    #     self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/part.0.parquet"))
+    def testCleanedHeadlinesFileExists(self):
+        build_status = luigi.build(
+            [CleanedHeadlines()], local_scheduler=True, detailed_summary=True
+        ).status
+        date = datetime.datetime.now()
+        date_suffix = str(date.month) + '_' + str(date.day) + '_' + str(date.year)
+        print('OUTPUT PATH', "./data/CleanedHeadlines-" + date_suffix + "/"))
+        self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/"))
+        self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/part.0.parquet"))
 
     def testDropNA(self):
         data = [['Tom', 10], ['Jen',5], ['Ruchi', np.nan]]

@@ -1,0 +1,10 @@
+[report]
+omit =
+    */tests.py
+    */test_*.py
+    */*_tests.py
+    */*__main__.py
+    */*cli.py
+    ./final_project/tasks/ngram_analysis.py 
+    ./final_project/tasks/topic_modeling.py
+    ./final_project/tasks/word_cloud.py
