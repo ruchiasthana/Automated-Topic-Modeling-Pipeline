@@ -31,7 +31,7 @@ class TestPipeline(TestCase):
         ).status
         date = datetime.datetime.now()
         date_suffix = str(date.month) + '_' + str(date.day) + '_' + str(date.year)
-        print('OUTPUT PATH', "./data/CleanedHeadlines-" + date_suffix + "/"))
+        print('OUTPUT PATH', "./data/CleanedHeadlines-" + date_suffix + "/")
         self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/"))
         self.assertTrue(os.path.exists("./data/CleanedHeadlines-" + date_suffix + "/part.0.parquet"))
 
