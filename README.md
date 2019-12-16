@@ -1,7 +1,7 @@
 # Automated Topic Modeling Pipeline For  Conversational Data 
 ## Advanced Python for Data Science (Final Project Fall 2019)
 
-[![Build Status](https://travis-ci.com/csci-e-29/2019fa-pset-5-ruchiasthana.svg?token=LoHckPFosYy1y1PJ2eXw&branch=master)](https://travis-ci.com/csci-e-29/2019fa-pset-5-ruchiasthana)
+[![Build Status](https://travis-ci.com/csci-e-29/2019fa-final-project-ruchiasthana.svg?token=LoHckPFosYy1y1PJ2eXw&branch=master)](https://travis-ci.com/csci-e-29/2019fa-final-project-ruchiasthana)
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/32e9444157afa590b963/maintainability)](https://codeclimate.com/repos/5df505699ce2d901a3007ae3/maintainability)
 
