@@ -20,10 +20,6 @@ Imsert a Table of Contents Here
 - [Improvements](#improvements)
 
 ## Project Description
-I work as a machine learning engineer at IBM. My team handles inbound communication channels for product specific webpages through platforms like chat. Our primary clients are internal IBM product teams looking to increase the accessibility of their product for customers. The chatbots we launch on IBM product specific webpages accure a lot of conversation data that can render meaningful insights about the products performance on the market. Below are key iterms that have a lot of value to our stakeholders:
-1. A Determinination of the Most Frequently Asked Topics
-2. Identification of the Most Commonly Mentioned Terms and Services 
-4. Effective Visualizations that can efficiently and effectively communicate key insights to Non-Technical Project Managers and Stakeholders
 For my final project I created an automated pipeline that fetches data from a cloud instance, cleans the data, and performs Topic Modeling, NGram Analysis, and Word Cloud Generation. You can view this process with the following command
 
 ```
@@ -51,8 +47,6 @@ Before diving into a detailed report of my final project, I just wanted to highl
 
 
 ## Data Preprocessing
-For the Client POC I build, I used historical chat transcript data, however that is not something I can share on this platform. For that purpose, I have loaded Arctile Text onto an AWS EC2 instance. Article Text was chosen because it is similar in nature to the chatbot utterances we wanted to analyze with Topic Modeling. Furthermore, the dataset was similar in size and dimension to the chat transcript data we have. 
-
 Data was loaded onto the AWS EC2 instance, it waas then cleaned by a CleanedHeadlines class before generating a Topic Model. Pre-processing the data included removing columns with empty or null data, as well as removing duplicates in data. Article ID Tags came in super handy for this process. Once the data was cleaned it was stored in partioned *.parquet files in the ./data/CleanedHeadlines-[date] folder. The reason behind including the date in the folders was to ensure we were only fetching data once a day. This was a descision made from our stakholders. 
 
 If you want to see the sole behavior of the Data Processing please run the command below: 
@@ -88,9 +82,9 @@ The output of this function will be stored in output/TopicModeling/HeadlineText-
 Running the Topic Modeling Code can be a very time cosuming process taking upwards of 20 minutes. While this time constraint is something our stakeholders seem to be okay with, we do not want them waiting around for a Topic Modeling Script to run if the cleaned data has not changed. To avoid this, we concatonate the last 50 headline_ids and hash the content to generate a len 8-alphanumeric id that we append to the output filepath. If an outputfile with the len 8-alphanumeric id exists, we do not re-run the topic modeling script as we know the data has not changed. 
 
 ## NGram Analysis 
-We also wanted to provide our stakeholders with some specific insight on terms that customers strongly expressed when interacting with an IBM product. In order to do this, we conducted the NGram Analysis. N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics customers have started talking about, and what topics have fallen out of favor. We focused mainly on 2 and 3 letter phrases known as bigrams and trigrams for this analysis. TF-IDF weightings can be applied to sets of ngrams to narrow down the scope of bigrams and trigrams returned. 
+N-Grams can be a very useful tool when trying to figure out which words and phrases are commonly expressed in a set of unstructured data. Analyzing trends in N-Grams can tell us what topics people have started talking about, and what topics have fallen out of favor. I focused mainly on 2 and 3 letter phrases known as bigrams and trigrams for this analysis. TF-IDF weightings can be applied to sets of ngrams to narrow down the scope of bigrams and trigrams returned. 
 
-Once we generated top bigrams and trigrams from our dataset, we went back and tagged each utterance with the most related bigrams and trigrams given a certain threshold. Our stakeholder's really liked this feature because it allowed them to take a commonly expressed bigram and see which utterances mentioned them. 
+Once I generated top bigrams and trigrams from our dataset,  I went back and tagged each utterance with the most related bigrams and trigrams given a certain threshold. 
 
 If you want to see the sole behavior of the NGram Analysis please run the command below: 
 ```
@@ -100,7 +94,7 @@ The output of this function will be stored in output/UtteranceNGramMappings/Head
 
 
 ## Word Cloud
-When you are parsing through conversations ranging in the millions, it is often diffuclt to convey the resulsts in an effective visual to both technical and non-technical adopters. Glancing at a Word Cloud, one could easily capture the most frequently occuring keywords in a set of data. A word cloud had a strong info to ink ratio making it an exceptional visual in the NLP community. I was able to create a Word Cloud based off terms in the conversation / headline text. Our product stakeholders really liked this visualization as it was "effecient, effective, and highly non-technical". The template to run this method is shown below:
+When you are parsing through conversations ranging in the millions, it is often diffuclt to convey the resulsts in an effective visual to both technical and non-technical adopters. Glancing at a Word Cloud, one could easily capture the most frequently occuring keywords in a set of data. A word cloud had a strong info to ink ratio making it an exceptional visual in the NLP community. I was able to create a Word Cloud based off terms in the conversation / headline text. The template to run this method is shown below:
 
 If you want to see the sole behavior of the WordCloud Generator please run the command below: 
 ```
@@ -122,10 +116,7 @@ pipenv run python3 -m final_project -a
 ```
 
 ## Improvements
-The stakeholders for this project were very impressed with the results from Topic Modeling. Together we were able to outline some next steps to proceed with the project in the next business quarter: 
-
-1. Integrate Pipeline with Cloudant Database
-2. Add Visualizations that Communicate Valuable Insights
-3. Containerize the pipeline (Consider Kubflow)
-4. Add more extensive unit tests for workflow!
+1. Add Visualizations that Communicate Valuable Insights
+2. Containerize the pipeline (Consider Kubflow)
+3. Add more extensive unit tests for workflow!
 
